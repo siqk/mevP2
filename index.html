@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@98fv | mev</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    background: #000;
+    min-height: 100vh;
+    color: #fff;
+    overflow-x: hidden;
+    padding-bottom: 100px; /* space for footer */
+    position: relative;
+  }
+
+  /* Background GIF */
+  .bg-gif {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://raw.githubusercontent.com/lqrpingfunds/mevP2/refs/heads/main/Just%20Dance%20Edit.gif') center center / cover no-repeat;
+    z-index: -2;
+    filter: brightness(0.5);
+  }
+
+  /* Landing Screen */
+  #landing {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    cursor: pointer;
+    transition: opacity 1s ease;
+  }
+
+  #landing h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(255,255,255,0.7);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { text-shadow: 0 0 20px rgba(255,255,255,0.7); }
+    50% { text-shadow: 0 0 40px rgba(255,255,255,1); }
+  }
+
+  /* Main content hidden initially */
+  #mainContent {
+    display: none;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Tabs */
+  .tabs {
+    position: fixed;
+    top: 15px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    width: 100%;
+    z-index: 100;
+  }
+
+  .tab {
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    padding-bottom: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: #fff;
+    border-radius: 1px;
+    transition: width 0.3s ease;
+  }
+
+  .tab:hover {
+    color: #ccc;
+  }
+
+  /* Content */
+  .content {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 90%;
+    text-align: center;
+    background: rgba(0,0,0,0);
+    padding-top: 60px;
+  }
+
+  .content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Profile */
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 20px;
+    background: rgba(0,0,0,0);
+  }
+
+  .avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-image: url('https://i.pinimg.com/736x/69/44/c9/6944c9a756d1d5f4b886bf71468ce508.jpg');
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  }
+
+  .avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255,255,255,0.3);
+  }
+
+  .display-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(0,0,0,0.5);
+  }
+
+  .username {
+    font-size: 1.2rem;
+    color: #ccc;
+  }
+
+  /* About Me */
+  .about-me {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 40px 20px;
+    background: rgba(0,0,0,0);
+  }
+
+  .about-me .bio p,
+  .about-me h2 {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+
+  /* Social links */
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .social-links a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .social-links a:hover {
+    color: #ccc;
+    text-shadow: 0 0 5px #fff;
+  }
+
+  @media (max-width: 768px) {
+    .about-me {
+      grid-template-columns: 1fr;
+    }
+    .social-links {
+      align-items: center;
+    }
+  }
+
+  /* Modern minimal progress bar footer */
+  #nowPlaying {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #nowPlayingTop {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  #songTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    flex: 1;
+  }
+
+  #songTime {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #fff;
+    margin-left: 10px;
+    white-space: nowrap;
+  }
+
+  #progressBarContainer {
+    margin-top: 6px;
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  #progressBar {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 3px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 6px rgba(255,255,255,0.6);
+  }
+</style>
+</head>
+<body>
+
+  <!-- Background GIF -->
+  <div class="bg-gif"></div>
+
+  <!-- Landing screen -->
+  <div id="landing">
+    <h1>Click to see motion.</h1>
+  </div>
+
+  <!-- Main content -->
+  <div id="mainContent">
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="profileTab">mev</div>
+      <div class="tab" data-tab="aboutTab">About Me</div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div class="content active" id="profileTab">
+      <div class="profile">
+        <div class="avatar"></div>
+        <div class="display-name">mev</div>
+        <div class="username">@98fv</div>
+      </div>
+    </div>
+
+    <!-- About Me Tab -->
+    <div class="content" id="aboutTab">
+      <div class="about-me">
+        <div class="bio">
+          <h2>- About Me -</h2>
+          <p>᲼         </p>
+          <p>/ wsp nigga's \</p>
+           <p>‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾</p>
+           <p>⬇         </p>
+          <p>/ check my socials. \</p>
+          <p>‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾</p>
+        </div>
+        <div class="socials">
+          <h2>- Socials -</h2>
+          <div class="social-links">
+            <a href="https://discord.gg/YtUcHKtXxM" target="_blank">Discord Server</a>
+            <a href="https://github.com/lqrpingfunds" target="_blank">GitHub</a>
+            <a href="https://www.youtube.com/@lqrpings" target="_blank">YouTube</a>
+            <a href="https://www.tiktok.com/@lqrpings" target="_blank">TikTok</a>
+            <a href="https://www.instagram.com/lqrpings/" target="_blank">Instagram</a>
+            <a href="https://cash.app/$tjayisle" target="_blank">CashApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <!-- Background music -->
+    <audio id="bgMusic" src="https://raw.githubusercontent.com/lqrpingfunds/mevP2/refs/heads/main/Just%20Dance.mp3" preload="auto"></audio>
+  </div>
+
+  <!-- Modern minimal progress bar -->
+  <div id="nowPlaying">
+    <div id="nowPlayingTop">
+      <div id="songTitle">lovers - babyteen</div>
+      <div id="songTime">0:00 / 0:00</div>
+    </div>
+    <div id="progressBarContainer">
+      <div id="progressBar"></div>
+    </div>
+  </div>
+
+<script>
+  const landing = document.getElementById('landing');
+  const mainContent = document.getElementById('mainContent');
+  const audio = document.getElementById('bgMusic');
+  const songTime = document.getElementById('songTime');
+  const progressBar = document.getElementById('progressBar');
+
+  // Landing click
+  landing.addEventListener('click', () => {
+    landing.style.opacity = '0';
+    setTimeout(() => {
+      landing.style.display = 'none';
+      mainContent.style.display = 'block';
+      audio.play();
+    }, 1000);
+  });
+
+  // Tabs functionality
+  const tabs = document.querySelectorAll('.tab');
+  const contents = document.querySelectorAll('.content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Update progress bar and time
+  audio.addEventListener('timeupdate', () => {
+    const current = audio.currentTime;
+    const total = audio.duration || 0;
+    const minutesCurrent = Math.floor(current / 60);
+    const secondsCurrent = Math.floor(current % 60).toString().padStart(2,'0');
+    const minutesTotal = Math.floor(total / 60);
+    const secondsTotal = Math.floor(total % 60).toString().padStart(2,'0');
+
+    songTime.textContent = `${minutesCurrent}:${secondsCurrent} / ${minutesTotal}:${secondsTotal}`;
+
+    const progressPercent = (current / total) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+  });
+</script>
+
+</body>
+</html>
+
